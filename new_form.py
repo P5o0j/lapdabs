@@ -5,7 +5,7 @@ import os
 import datetime
 
 #connect to database
-def check_db(filenamde):
+def check_db(filename):
     return os.path.exists(filename)
 
 db_file = 'thisAPP.db'
@@ -16,14 +16,14 @@ if check_db(db_file):
 
 
 #get vrn
-
+def vrn_check():
+    vrn = input('Registration Number: ')
+    vrn = vrn.upper()
 
 
 #check if entry is in database
 with sqlite3.connect(db_file) as conn:
-    conn.executescript("""
-    
-    """)
+    conn.executescript('SELECT vrn FROM CARS WHERE code=?', vrn)
 
 
 #if entry is in database show details
