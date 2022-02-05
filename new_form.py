@@ -23,7 +23,7 @@ def vrn_check():
 
 #check if entry is in database
 with sqlite3.connect(db_file) as conn:
-    conn.executescript('SELECT vrn FROM CARS WHERE code=?', vrn)
+    conn.executescript('SELECT regnum FROM vehicles WHERE code=?', vrn)
 
 
 #if entry is in database show details
