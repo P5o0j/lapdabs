@@ -77,5 +77,29 @@ CREATE TABLE "visit" (
 
 
 
+CREATE VIEW vw_vehicles AS
+	SELECT v.regnum, v.make, v.model, ft.type, v.millage, v.colour, v.MOT
+	FROM vehicles v 
+	INNER JOIN FuelType ft
+	ON v.fuelcde=ft.fuelcde;
 
+
+CREATE VIEW vw_customers AS 
+	SELECT
+		c.cuscde AS 'Customer Code',
+		c.name AS 'Name',
+		c.surname AS 'Surname',
+		c.company AS 'Company',
+		c.addrl1 AS 'Address',
+		c.addrl2 AS 'Address',
+		c.postcode AS 'Postcode',
+		c.city AS 'City',
+		c.phonum AS 'Phone Number',
+		c.email AS 'Email',
+		v.regnum AS 'Registration',
+		v.make AS 'Make',
+		v.model AS 'Model'
+	FROM customer c 
+	INNER JOIN vehicles v
+	ON c.regnum=v.regnum;
 
