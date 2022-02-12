@@ -1,23 +1,57 @@
-CREATE DATABASE thisAPP;
+"""One time run script which will create tables in database"""
 
-PRAGMA foreign_keys = ON;
+import sqlite3
+import os
+import datetime
+#from sqlite3.dbapi2 import converters
+import sys
+from time import sleep
+from clear import clear
+
+#connect to database
+def check_db(filename):
+    return os.path.exists(filename)
+
+db_file = 'thisAPP1.db'
+
+if check_db(db_file):
+    print('Connected to database')
+
+conn = sqlite3.connect(db_file)
+sleep(2)
+clear()
 
 
-CREATE TABLE "PaymentMethod" (
+print('Creating tables: ')
+sleep(2)
+
+#Create payment Method table
+conn.execute('''
+    CREATE TABLE "PaymentMethod" (
 	"paycde"	VARCHAR(10) NOT NULL UNIQUE,
 	"method"	VARCHAR(20) NOT NULL,
 	PRIMARY KEY("paycde")
-);
+)
+''')
+print('Table Payment Method created')
+sleep(2)
+#clear()
 
-
-CREATE TABLE "FuelType" (
+#Create Fuel type table
+conn.execute('''
+    CREATE TABLE "FuelType" (
 	"fuelcde"	VARCHAR(10) NOT NULL UNIQUE,
 	"type"	VARCHAR(20) NOT NULL,
 	PRIMARY KEY("fuelcde")
-);
+)
+''')
+print('Table Fuel Type created')
+sleep(2)
+#clear()
 
-
-CREATE TABLE "vehicles" (
+#create vehicles table
+conn.execute('''
+    CREATE TABLE "vehicles" (
 	"regnum"	VARCHAR(15) NOT NULL UNIQUE,
 	"make"	VARCHAR(20) NOT NULL,
 	"model"	VARCHAR(20) NOT NULL,
@@ -27,10 +61,15 @@ CREATE TABLE "vehicles" (
 	"MOT"	date,
 	PRIMARY KEY("regnum"),
 	FOREIGN KEY ("fuelcde") REFERENCES FuelType("fuelcde")
-);
+)
+''')
+print('Table Vehicles created')
+sleep(2)
+#clear()
 
-
-CREATE TABLE "customer" (
+#create customers table
+conn.execute('''
+    CREATE TABLE "customer" (
 	"cuscde"	VARCHAR(10) NOT NULL UNIQUE,
 	"regnum"	VARCHAR(20) NOT NULL UNIQUE,
 	"name"	VARCHAR(20) NOT NULL,
@@ -45,21 +84,30 @@ CREATE TABLE "customer" (
 	"email"	VARCHAR(30),
 	PRIMARY KEY("cuscde"),
 	FOREIGN KEY("regnum") REFERENCES "vehicles"("regnum")
-);
+)
+''')
+print('Table Customer created')
+sleep(2)
+#clear()
 
-
-
-CREATE TABLE "service" (
+#create service table
+conn.execute('''
+    CREATE TABLE "service" (
 	"jobcde"	VARCHAR(10) NOT NULL UNIQUE,
 	"description"	VARCHAR(99),
 	"partno"	VARCHAR(15) UNIQUE,
 	"duration"	INTEGER,
 	"price"	DOUBLE(6, 2),
 	PRIMARY KEY("jobcde")
-);
+)
+''')
+print('Table Service created')
+sleep(2)
+#clear()
 
-
-CREATE TABLE "visit" (
+#create visit table
+conn.execute('''
+    CREATE TABLE "visit" (
 	"date"	date NOT NULL,
 	"regnum"	VARCHAR(20) NOT NULL,
 	"cuscde"	INTEGER NOT NULL,
@@ -73,18 +121,31 @@ CREATE TABLE "visit" (
 	FOREIGN KEY("cuscde") REFERENCES "customer"("cuscde"),
 	FOREIGN KEY("paycde") REFERENCES "paymet"("paycde"),
 	FOREIGN KEY("regnum") REFERENCES "customer"("regnum")
-);
+)
+''')
+print('Table Visit created')
+sleep(2)
+clear()
 
 
-
-CREATE VIEW vw_vehicles AS
+#CREATE VIEWS
+print('Creating views: ')
+sleep(2)
+#create vw_vehicles views
+conn.execute('''
+    CREATE VIEW vw_vehicles AS
 	SELECT v.regnum, v.make, v.model, ft.type, v.millage, v.colour, v.MOT
 	FROM vehicles v 
 	INNER JOIN FuelType ft
-	ON v.fuelcde=ft.fuelcde;
+	ON v.fuelcde=ft.fuelcde
+''')
+print('Vehicle view created')
+sleep(2)
+#clear()
 
-
-CREATE VIEW vw_customers AS 
+#create vw_customers view
+conn.execute('''
+    CREATE VIEW vw_customers AS 
 	SELECT
 		c.cuscde AS 'Customer Code',
 		c.name AS 'Name',
@@ -101,5 +162,16 @@ CREATE VIEW vw_customers AS
 		v.model AS 'Model'
 	FROM customer c 
 	INNER JOIN vehicles v
-	ON c.regnum=v.regnum;
+	ON c.regnum=v.regnum
+''')
+print('Customer view created')
+sleep(2)
 
+#enable foreign keys
+conn.execute('''
+    PRAGMA foreign_keys = ON
+''')
+
+#commit changes
+conn.commit()
+conn.close()
