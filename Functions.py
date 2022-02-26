@@ -41,3 +41,4 @@ def form():
     with open (f"C:\\Users\\skole\\Desktop\\temp\\{filename}", "w") as file:
         file.write(message)
 
+form()

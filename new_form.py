@@ -3,10 +3,12 @@
 import sqlite3
 import os
 import datetime
-#from sqlite3.dbapi2 import converters
+from sqlite3.dbapi2 import Cursor, Row, converters
 import sys
 from time import sleep
 from clear import clear
+from car_details import car_details
+
 
 #connect to database
 def check_db(filename):
@@ -18,33 +20,33 @@ if check_db(db_file):
     print('Connected to database')
 
 conn = sqlite3.connect(db_file)
-sleep(2)
+cursor = conn.cursor()
+#sleep(2)
 clear()
-
+  
 #get vrn
 def vrn_exist():
     vrn = input('Registration Number: ')
     vrn = vrn.upper()
 
 
-
-
-#check if entry is in database
-    for row in conn.execute("SELECT * FROM vw_vehicles WHERE regnum= ?", [vrn]):
-        print(row)
-        return True
-
-#if entry is in database show details
-        if row == True:
-            print("Car in db")
-
+#check if vrn is in database
+    data = cursor.execute("SELECT * FROM vw_vehicles WHERE regnum=?;", [vrn]).fetchone()
+    if data is not None:
+        #show car details
+        car_details(row)
+    else:
+        print('Car not in db. Would you like to add it?')
+            
 
 #ask if details are correct/ if not allow user to edit them 
+        
 
 
 
 #if entry not in database insert new line
-
+    
+            
 
 
 #close database connection
