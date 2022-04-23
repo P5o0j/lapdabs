@@ -25,6 +25,9 @@ cursor = conn.cursor()
 clear()
 
 def car_insert():
+    #get date when entry was added
+    dateAdd = date.today()
+
     vrn = input('Registration Number: ')
     #print(f"Registration number : {vrn}")
     #fname = input('Owner name: ')
@@ -57,7 +60,7 @@ def car_insert():
             continue
     mot = input('MOT due date: ')
 
-    cursor.execute("INSERT INTO temp_veh values (?,?,?,?,?,?,?);", (vrn.upper(), make.capitalize(), model.capitalize(), fuel, milage, colour, mot ))
+    cursor.execute("INSERT INTO temp_veh values (?,?,?,?,?,?,?,?);", (dateAdd, vrn.upper(), make.capitalize(), model.capitalize(), fuel, milage, colour, mot ))
     conn.commit()
 
     print('Car added to database')
