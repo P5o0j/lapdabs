@@ -25,7 +25,7 @@ clear()
 
 
 
-def customer():
+def new_customer():
 
     #bulid customer code
     dataset=cursor.execute("SELECT COUNT(*) FROM temp_customer")
