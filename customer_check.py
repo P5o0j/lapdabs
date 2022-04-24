@@ -10,6 +10,8 @@ from time import sleep
 from clear import clear
 from datetime import date
 from new_customer import new_customer
+from customer_details import customer_details
+
 
 def check_db(filename):
     return os.path.exists(filename)
@@ -37,31 +39,34 @@ def customer_check():
                 yn1 = input('Show Details?\nY or N')
                 yn1 = yn1.upper()
                 if yn1 == 'Y':
-                    print('hell yes')
+                    customer_details(row)
                     break
                 elif yn1 =='N':
-                    print('hell no')
+                    customer_check()
                     break
                 else:
                     print('Choose Y or N')
             except Exception as e:
                 continue
     #if not found ask if add the details
-         else:
+    else:
+        while True:
+            try:
+                yn2 = input('Show Details?\nY or N')
+                yn2 = yn2.upper()
+                #if yes get new details
+                if yn2 == 'Y':
+                    new_customer()
+                    break
+                #if not go back to start
+                elif yn2 =='N':
+                    customer_check()
+                    break
+                else:
+                    print('Choose Y or N')
+            except Exception as e:
+                continue
     
-
-
-    
-
-
-    #if yes get new details
-
-
-    #if not go back to start
-
-
-
-
 
 customer_check()
 conn.close()
